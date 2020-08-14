@@ -1,0 +1,72 @@
+.TH POST 1
+.SH NAME
+post \- publish a file descriptor
+.SH SYNOPSIS
+.B post
+[
+.B -q
+] [
+.B -m
+mode
+] file [ name ]
+.SH DESCRIPTION
+.I Post
+opens
+.I file
+with highest allowed mode then
+publishes the open channel to the
+.BR srv (3)
+bulletin board, using the given
+.I mode
+(default 0660)
+and
+.I name
+(default
+.IR post.$pid ).
+.PP
+Finally, it prints the created
+path; the flag
+.I -q
+silences it.
+.SH EXAMPLES
+.PP
+Post our standard output:
+.PP
+.EX
+	post /fd/1 output
+.EE
+.PP
+Post a file descriptor connected to
+.IR ramfs (4)
+using stdio as its 9p channel.
+.PP
+.EX
+	post <>{ramfs -i >[1=0]} ram
+.EE
+.PP
+Same as above but also mount:
+.PP
+.EX
+	mount -bc `{post <>{ramfs -i >[1=0]}} /n/ram
+.EE
+.PP
+Post a connection to a remote service:
+.PP
+.EX
+	post <>{aux/trampoline tcp!9front.org!http >[1=0]}
+.EE
+.SH SEE ALSO
+.IR srv (3)
+.SH SOURCE
+.EX
+git/clone git://src.a-b.xyz/post
+.EE
+.SH BUGS
+To determine the highest mode with
+which the file can be opened with
+.IR post (1)
+must attempt to open the
+.I file
+up to
+three times. This may be an issue
+with some file servers.
