@@ -36,6 +36,13 @@ Post our standard output:
 	post /fd/1 output
 .EE
 .PP
+Post an rc shell:
+.EX
+	post <>{rc -i >[1=0] >[2=0]} rc
+	# attach, possibly from another namespace
+	cat /srv/rc & cat >>/srv/rc
+.EE
+.PP
 Post a file descriptor connected to
 .IR ramfs (4)
 using stdio as its 9p channel.
@@ -65,7 +72,7 @@ git/clone git://src.a-b.xyz/post
 To determine the highest mode with
 which the file can be opened with
 .IR post (1)
-must attempt to open the
+attempts to open the
 .I file
 up to
 three times. This may be an issue
